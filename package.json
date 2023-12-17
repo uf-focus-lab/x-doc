@@ -1,0 +1,21 @@
+{
+  "type": "module",
+  "name": "x-doc",
+  "description": "Vitepress doc for X, mirror of X.org (version 11, release 7.7)",
+  "license": "MIT",
+  "author": {
+    "name": "Yuxuan Zhang",
+    "email": "github@z-yx.cc"
+  },
+  "devDependencies": {
+    "front-matter": "^4.0.2",
+    "jsdom": "^23.0.1",
+    "vitepress": "^1.0.0-rc.31",
+    "yaml": "^2.3.4"
+  },
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  }
+}

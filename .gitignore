@@ -1,0 +1,13 @@
+# NodeJS modules
+node_modules/
+package-lock.json
+# VSCode
+.vscode
+# HTTP download cache
+.cache/
+# Automatically fetched and processed at build time
+docs/
+var/
+# VitePress generated caches
+config/cache/
+config/dist/
