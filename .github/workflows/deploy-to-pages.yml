@@ -26,20 +26,22 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
       - name: Fetch Github Release Asset
         uses: dsaltares/fetch-gh-release-asset@master
         with:
           file: "dist.tar.gz"
+
       - name: Extract Tarball
         run:  tar -xzf dist.tar.gz # Should extract to ./dist/
+
       - name: Touch NoJekyll
         run:  touch dist/.nojekyll
 
       - name: Fix Permissions
         run:  chmod -R +rX dist
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
 
       - name: Upload Artifact
         uses: actions/upload-pages-artifact@v2
