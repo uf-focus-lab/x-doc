@@ -5,9 +5,16 @@ package-lock.json
 .vscode
 # HTTP download cache
 .cache/
+# Vitepress generated files
+.vitepress/
+config/.temp/
 # Automatically fetched and processed at build time
 docs/
 var/
 # VitePress generated caches
 config/cache/
 config/dist/
+# tar[gz] objects for distribution
+*.tar
+*.tar.gz
+*.tgz

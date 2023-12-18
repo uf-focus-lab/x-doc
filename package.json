@@ -2,6 +2,7 @@
   "type": "module",
   "name": "x-doc",
   "description": "Vitepress doc for X, mirror of X.org (version 11, release 7.7)",
+  "origin": "http://www.x.org/releases/X11R7.7/doc/",
   "license": "MIT",
   "author": {
     "name": "Yuxuan Zhang",
@@ -15,7 +16,9 @@
   },
   "scripts": {
     "dev": "vitepress dev docs",
+    "prebuild": "rm -rf config/dist",
     "build": "vitepress build docs",
+    "postbuild": "tar -czf dist.tar.gz -C config dist",
     "preview": "vitepress preview docs"
   }
 }
