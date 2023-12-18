@@ -13,7 +13,7 @@ import traverse from '../../lib/traverse.js'
 import { ELEMENT_NODE } from '../../lib/transform.js'
 import { baseURL } from '../../lib/env.js'
 
-import { source_id } from '../fetch_raw.js';
+import { source_id } from '../fetch-raw.js';
 
 const src_id = process.env.SRC_ID
 const id_list = readFileSync(process.env.LIST, 'utf-8').split('\n').filter(Boolean);

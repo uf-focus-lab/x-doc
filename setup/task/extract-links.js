@@ -9,7 +9,7 @@ import { JSDOM } from 'jsdom'
 import traverse from '../../lib/traverse.js'
 import { ELEMENT_NODE } from '../../lib/transform.js'
 
-import { source_id } from '../fetch_raw.js';
+import { source_id } from '../fetch-raw.js';
 
 const src = new URL(process.env.SRC)
 const { window: { document } } = await JSDOM.fromFile(process.env.FILE);

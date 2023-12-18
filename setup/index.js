@@ -9,7 +9,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { baseURL } from '../lib/env.js';
 
 import writeFile, { init_dir, renew, cleanup } from '../lib/output.js';
-import { source, all_files } from './fetch_raw.js'
+import { source, all_files } from './fetch-raw.js'
 import transform from './transform.js'
 
 await init_dir();

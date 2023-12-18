@@ -14,7 +14,7 @@ import writeFile from '../lib/output.js';
 import PoolPromise, { queue } from '../lib/pool.js'
 
 const dir = dirname(fileURLToPath(import.meta.url))
-const __extract_links__ = resolve(dir, 'extract-links.js')
+const __extract_links__ = resolve(dir, 'task', 'extract-links.js')
 
 // List of already downloaded resources
 const tree = {};
