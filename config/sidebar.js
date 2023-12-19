@@ -10,47 +10,59 @@ import { resolve } from 'path';
 import get_title from './get-title.js';
 
 const doc_root = resolve(process.env.PWD, 'docs');
-const list = readFileSync(resolve(doc_root, 'list.txt'), 'utf8')
+const list = readFileSync(resolve(doc_root, 'remap.list'), 'utf8')
     .split('\n')
     .filter(Boolean)
     .map(l => l.trim());
 
 export const sidebar = list.reduce((dict, src_id) => {
-    let [dir, ...paths] = src_id.split('/');
-    let title = dir;
-    if (dir === 'man' && paths.length > 1) {
-        title = paths.shift();
-        dir = [dir, title].join('/');
-    }
-    dir = `/${dir}/`;
+    const [dir, ...paths] = src_id.split('/');
+    const title = dir;
+    const key = `/${dir}/`;
     if (paths.length === 0) return dict;
-    if (!(dir in dict)) dict[dir] = {
+    if (!(key in dict)) dict[key] = {
         text: title,
         items: []
     };
-    dict[dir].items.push('/' + src_id);
+    dict[key].items.push('/' + src_id);
     return dict;
 }, {});
 
-// Find index or readme as default page
-for (const key in sidebar) {
-    if (sidebar[key].items.length === 1) {
-        const [abs_path] = sidebar[key].items;
-        const item = abs_path.replace(/^\/+/, '');
-        if (existsSync(item + '.json')) {
-            const index = JSON.parse(readFileSync(item + '.json', 'utf8'));
-            if (Array.isArray(index))
-                sidebar[key].items.push(...index.map(i => i?.link ?? i));
+function reform(obj, key) {
+    const dirs = [];
+    const items = obj.items.map(link => {
+        const text = get_title(link);
+        if (link.endsWith('/')) {
+            dirs.push(link);
+            const sub_items = JSON.parse(readFileSync('docs' + link + 'index.json'), 'utf8');
+            check_sub_link: for (const _link of obj.items) {
+                if (!_link.startsWith(link)) continue;
+                if (link === _link) continue;
+                const _text = get_title(_link);
+                for (const sub_item of sub_items) {
+                    if (sub_item.link === _link)
+                        continue check_sub_link;
+                }
+                sub_items.push({ text: _text, link: _link });
+            }
+            return {
+                text, link, collapsed: true, items: sub_items
+            }
+        } else {
+            return { text, link }
         }
-    }
-    sidebar[key].items = sidebar[key].items.map(item => {
-        if (typeof item !== 'string') return item;
-        return {
-            text: get_title(item),
-            link: item
+    })
+    // Filter already included entries
+    obj.items = items.filter(({ link }) => {
+        if (link.endsWith('/')) return true;
+        for (const dir of dirs) {
+            if (link.startsWith(dir)) return false;
         }
-    });
+        return true;
+    })
 }
+
+Object.entries(sidebar).forEach(([key, el]) => reform(el, key));
 
 try {
     mkdirSync('var', { recursive: true })

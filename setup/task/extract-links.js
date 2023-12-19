@@ -6,8 +6,7 @@
 
 import { JSDOM } from 'jsdom'
 
-import traverse from '../../lib/traverse.js'
-import { ELEMENT_NODE } from '../../lib/transform.js'
+import traverse, { ELEMENT_NODE } from '../../lib/traverse.js'
 
 import { source_id } from '../fetch-raw.js';
 

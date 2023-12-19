@@ -16,13 +16,26 @@ export const nav = [];
 
 let ctx;
 for (const { context = {}, link = '' } of JSON.parse(index)) {
-    let { h2 = "About" } = context;
+    let { h2 = "About", h3 } = context;
     h2 = h2.replace(/\:$/, '');
     if (h2 !== ctx?.text) {
-        ctx = { text: h2, items: [] };
+        ctx = { text: h2, items: [], sub_dirs: {} };
         nav.push(ctx);
     }
-    ctx.items.push({ text: get_title(link), link });
+    let { items } = ctx;
+    if (h3 !== undefined) {
+        h3 = h3.replace(/\:$/, '');
+        if (!ctx.sub_dirs[h3]) {
+            ctx.sub_dirs[h3] = { text: h3, items: [] };
+            ctx.items.push(ctx.sub_dirs[h3]);
+        }
+        items = ctx.sub_dirs[h3].items;
+    }
+    items.push({ text: get_title(link), link });
+}
+
+for (const el of nav) {
+    delete el.sub_dirs;
 }
 
 try {

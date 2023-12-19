@@ -9,11 +9,13 @@ import { readFileSync } from 'fs';
 import fm from 'front-matter';
 
 export default function get_title(id) {
-    const md_src = "docs/" + id.replace(/^\/+/gi, '') + ".md";
+    const md_src = "docs/" + id
+        .replace(/^\/+/gi, '')
+        .replace(/\/$/, '/index') + ".md";
     try {
         const file = fm(readFileSync(md_src, 'utf8'));
         if (file?.attributes?.title)
             return file?.attributes?.title
     } catch (_) { }
-    return id.split('/').pop();
+    return id.replace('/', '-');
 }

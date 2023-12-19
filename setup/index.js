@@ -11,50 +11,63 @@ import { baseURL } from '../lib/env.js';
 import writeFile, { init_dir, renew, cleanup } from '../lib/output.js';
 import { source, all_files } from './fetch-raw.js'
 import transform from './transform.js'
+import { compare_path } from '../lib/utility.js';
 
 await init_dir();
 
 const src = new URL(baseURL.href + 'index.html')
-/**
- * @returns {IterableIterator<[String, String]>}
- */
-function* segments(seg1, seg2) {
-    for (let i = 0; i < Math.min(seg1.length, seg2.length); i++) {
-        yield seg1[i], seg2[i];
-    }
-}
 
 // Prepare all source files
-const id_list = await (async () => {
-    if (existsSync('docs/list.txt')) {
+const raw_list = await (async () => {
+    if (existsSync('docs/raw.list')) {
         console.log("[@] Using existing resource list");
-        renew('list.txt');
-        const list = readFileSync('docs/list.txt', 'utf-8')
+        const list = readFileSync('docs/raw.list', 'utf-8')
             .split('\n')
             .filter(Boolean);
+        list.sort(compare_path);
         list.forEach(src_id => renew(src_id + '.raw.html'));
+        await writeFile('raw.list', list.join('\n'));
         return list;
     } else {
         await source(src);
         const list = await all_files();
-        list.sort((a, b) => {
-            a = a.split('/');
-            b = b.split('/');
-            if (a.length !== b.length)
-                return a.length - b.length;
-            for (const [x, y] of segments(a, b)) {
-                // First compare by length
-                if (x.length !== y.length)
-                    return x.length - y.length;
-                // Then compare by string
-                if (x !== y)
-                    return x.localeCompare(y);
-            }
-        });
-        await writeFile('list.txt', list.join('\n'));
+        list.sort(compare_path);
+        await writeFile('raw.list', list.join('\n'));
         return list;
     }
 })();
+
+// Map to new source tree
+const remap = [];
+
+const LUT = {
+    "libX11/i18n/compose/libX11-keys": "libX11/i18n/compose/"
+}
+
+match_next_label: for (const src_id of raw_list) {
+    if (src_id in LUT) {
+        remap.push(LUT[src_id]);
+        continue;
+    }
+    const dirs = src_id.split('/'), tmp = [];
+    match_deeper_dir: while (dirs.length > 1) {
+        tmp.push(dirs.shift());
+        const dir = tmp.join('/') + '/';
+        for (const other_src_id of raw_list) {
+            if (src_id === other_src_id) continue;
+            if (other_src_id.startsWith(dir))
+                continue match_deeper_dir;
+        }
+        remap.push([...tmp, ''].join('/'));
+        continue match_next_label;
+    }
+    remap.push(src_id.replace(/\/index$/, '/'));
+}
+
+await writeFile('remap.list', Object.values(remap).sort(compare_path).join('\n'));
+
+if (remap.length !== raw_list.length)
+    throw new Error("Remap list length mismatch");
 
 // // Transform shallow tree
 // const dir_tree = { ".": [] };
@@ -68,11 +81,11 @@ const id_list = await (async () => {
 //         dir["."].push(value);
 //     }
 // }
-// for (const src_id in id_list) {
+// for (const src_id in raw_list) {
 //     dir_push(dir_tree, basename(src_id), ...dirname(src_id).split('/'));
 // }
 
 // Transform source files
-await transform(id_list);
+await transform(raw_list);
 
 cleanup();

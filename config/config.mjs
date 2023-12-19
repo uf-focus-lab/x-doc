@@ -9,7 +9,7 @@ import { nav } from './nav.js';
 import { sidebar } from './sidebar.js';
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-    title: "X.org Documentation",
+    title: "X-DOC",
     description: "Modern looking documentation for X. Content ported from X.org (version 11, release 7.7).",
     // https://vitepress.dev/reference/default-theme-config
     themeConfig: {
