@@ -34,6 +34,14 @@ function children(node) {
     }
 }
 /**
+ * @param {String} str 
+ */
+function get_name(str) {
+    str = str.slice(str.indexOf('-') + 1);
+    str = str.replace(/\-+/g, s => s.length > 1 ? '-' : ' ');
+    return str.trim();
+}
+/**
  * @param {HTMLElement} sec 
  */
 function break_section(sec) {
@@ -109,8 +117,14 @@ export default function breakdown(src_id, body, write) {
                 'h1, h2, h3, h4, .title'
             );
             if (title_node) {
-                const title = title_node.textContent
+                const h1 = title_node.ownerDocument.createElement('h1');
+                h1.innerHTML = title_node.innerHTML;
+                for (const attr of title_node.getAttributeNames())
+                    h1.setAttribute(attr, title_node.getAttribute(attr));
+                title_node.parentNode.replaceChild(h1, title_node);
+                const title = h1.textContent
                     .trim()
+                    .replace(':', '-')
                     .split('')
                     .filter(c => /^(\s|[a-z]|[0-9]|_|\-)$/ig.test(c))
                     .join('')
@@ -137,9 +151,9 @@ export default function breakdown(src_id, body, write) {
         for (const [i, seg] of segments.entries()) {
             const seg_id = segNames[i];
             console.log("#", "|", '/'.padStart(src_id.length) + seg_id);
-            write(src_id + seg_id, seg.innerHTML, seg_id);
+            write(src_id + seg_id, seg.innerHTML, get_name(seg_id));
         }
         // Return index_page elements
-        return [index_page, segNames.map(n => ({ link: src_id + n, text: n.split('-').slice(1).join(' ') }))];
+        return [index_page, segNames.map(sid => ({ link: src_id + sid, text: get_name(sid) }))];
     }
 }

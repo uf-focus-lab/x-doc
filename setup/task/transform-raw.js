@@ -53,8 +53,14 @@ function write_html_md(id, src, title) {
         `---`,
         '',
         `<script setup>`,
-        `import html from "/${id}.src.html?raw";`,
+        `import { onMounted, ref } from "vue";`,
+        `const html = ref("");`,
+        `onMounted(async () => {`,
+        `    const raw = await import("/${id}.src.html?raw");`,
+        `    html.value = raw?.default ?? "Error Loading Content";`,
+        `});`,
         `</script>`,
+        '',
         `<div v-html="html"></div>`,
     ].join('\n'));
 }

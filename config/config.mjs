@@ -16,7 +16,7 @@ export default defineConfig({
         nav,
         sidebar,
         socialLinks: [
-            { icon: 'github', link: 'https://github.com/zhangyx-lab/x-org-docs' }
+            { icon: 'github', link: 'https://github.com/zhangyx-lab/x-doc' }
         ],
         logo: '/logo.png',
         logoLink: '/',

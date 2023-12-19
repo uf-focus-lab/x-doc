@@ -45,7 +45,8 @@ function reform(obj, key) {
                 }
                 sub_items.push({ text: _text, link: _link });
             }
-            return {
+            if (sub_items.length === 0) return { text, link };
+            else return {
                 text, link, collapsed: true, items: sub_items
             }
         } else {
