@@ -5,7 +5,8 @@
  * ------------------------------------------------------ */
 
 import { JSDOM } from 'jsdom'
-import { readFileSync, writeFileSync } from 'fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { dirname } from 'path'
 
 import YAML from 'yaml';
 
@@ -42,6 +43,7 @@ const disallowed_tags = [
 
 function write(file, data) {
     console.log(file);
+    mkdirSync(dirname(file), { recursive: true })
     writeFileSync(file, data);
 }
 
@@ -57,7 +59,7 @@ function write_html_md(id, src, title) {
         `const html = ref("");`,
         `onMounted(async () => {`,
         `    const raw = await import("/${id}.src.html?raw");`,
-        `    html.value = raw?.default ?? "Error Loading Content";`,
+        `    html.value = raw.default;`,
         `});`,
         `</script>`,
         '',

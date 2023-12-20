@@ -16,9 +16,9 @@
   },
   "scripts": {
     "dev": "vitepress dev docs",
-    "prebuild": "rm -rf config/dist",
+    "prebuild": "mkdir -p var",
     "build": "vitepress build docs",
-    "postbuild": "tar -czf dist.tar.gz -C config dist",
+    "postbuild": "tar -czf var/dist.tar.gz -C var dist",
     "preview": "vitepress preview docs"
   }
 }

@@ -154,6 +154,6 @@ export default function breakdown(src_id, body, write) {
             write(src_id + seg_id, seg.innerHTML, get_name(seg_id));
         }
         // Return index_page elements
-        return [index_page, segNames.map(sid => ({ link: src_id + sid, text: get_name(sid) }))];
+        return [index_page, segNames.map(sid => ({ link: '/' + src_id + sid, text: get_name(sid) }))];
     }
 }

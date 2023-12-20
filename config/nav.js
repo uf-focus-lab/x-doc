@@ -12,7 +12,7 @@ import get_title from './get-title.js';
 const doc_root = resolve(process.env.PWD, 'docs');
 const index = readFileSync(resolve(doc_root, 'index.json'), 'utf8');
 
-export const nav = [];
+const nav = [];
 
 let ctx;
 for (const { context = {}, link = '' } of JSON.parse(index)) {
@@ -47,3 +47,5 @@ try {
 } catch (e) {
     console.error(e);
 }
+
+export default nav;
