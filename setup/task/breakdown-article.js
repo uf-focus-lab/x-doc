@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------
- * Copyright (c) 2023 Yuxuan Zhang @ FOCUS Lab
+ * Copyright (c) 2023 Yuxuan Zhang, web-dev@z-yx.cc
  * This source code is licensed under the MIT license.
  * You may find the full license in project root directory.
  * ------------------------------------------------------ */
@@ -33,14 +33,7 @@ function children(node) {
         else return [node];
     }
 }
-/**
- * @param {String} str 
- */
-function get_name(str) {
-    str = str.slice(str.indexOf('-') + 1);
-    str = str.replace(/\-+/g, s => s.length > 1 ? '-' : ' ');
-    return str.trim();
-}
+
 /**
  * @param {HTMLElement} sec 
  */
@@ -111,6 +104,7 @@ export default function breakdown(src_id, body, write) {
             }
         }
         // Find names from segments
+        const segTitles = {};
         const segNames = segments.map((seg, i) => {
             const idx = `${i + 1}`.padStart(2, '0')
             const title_node = seg.querySelector(
@@ -122,16 +116,21 @@ export default function breakdown(src_id, body, write) {
                 for (const attr of title_node.getAttributeNames())
                     h1.setAttribute(attr, title_node.getAttribute(attr));
                 title_node.parentNode.replaceChild(h1, title_node);
-                const title = h1.textContent
-                    .trim()
-                    .replace(':', '-')
+                const title = h1.textContent.trim();
+                const title_id = title
+                    .toLowerCase()
                     .split('')
                     .filter(c => /^(\s|[a-z]|[0-9]|_|\-)$/ig.test(c))
                     .join('')
                     .slice(0, 64)
                     .replace(/\s+/g, '-');
-                if (title) return [idx, title].join('-');
+                if (title && title_id) {
+                    const seg_id = [idx, title_id].join('-');
+                    segTitles[seg_id] = title;
+                    return seg_id;
+                }
             }
+            segTitles[idx] = 'untitled';
             return idx;
         });
         // Rewrite hash links according to hash map
@@ -140,20 +139,25 @@ export default function breakdown(src_id, body, write) {
             if (!(seg_id in segNames)) continue;
             node.setAttribute('href', [segNames[seg_id], id].join('#'));
         }
-        for (const [node, id] of href_nodes(...segments)) {
-            const seg_id = hash_map[id];
-            if (seg_id === 'index')
-                node.setAttribute('href', ['./', id].join('#'));
-            else if (seg_id in segNames)
-                node.setAttribute('href', [segNames[seg_id], id].join('#'));
-        }
-        // Save all segments
         for (const [i, seg] of segments.entries()) {
             const seg_id = segNames[i];
+            for (const [node, id] of href_nodes(seg)) {
+                const target_id = hash_map[id];
+                // Skip if the link is in the same segment
+                if (target_id === seg_id) continue;
+                else if (target_id === 'index')
+                    node.setAttribute('href', ['./', id].join('#'));
+                else if (target_id in segNames)
+                    node.setAttribute('href', [segNames[target_id], id].join('#'));
+            }
+            // Save this segment
             console.log("#", "|", '/'.padStart(src_id.length) + seg_id);
-            write(src_id + seg_id, seg.innerHTML, get_name(seg_id));
+            write(src_id + seg_id, seg.innerHTML, segTitles[seg_id]);
         }
         // Return index_page elements
-        return [index_page, segNames.map(sid => ({ link: '/' + src_id + sid, text: get_name(sid) }))];
+        return [index_page, segNames.map(sid => ({
+            link: '/' + src_id + sid,
+            text: segTitles[sid]
+        }))];
     }
 }

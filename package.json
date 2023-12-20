@@ -11,6 +11,8 @@
   "devDependencies": {
     "front-matter": "^4.0.2",
     "jsdom": "^23.0.1",
+    "lang-detector": "^1.0.6",
+    "shiki": "^0.14.7",
     "vitepress": "^1.0.0-rc.32",
     "yaml": "^2.3.4"
   },

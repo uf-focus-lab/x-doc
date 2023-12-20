@@ -1,0 +1,11 @@
+/**
+ * Code block highlighting with dual color scheme
+ */
+
+html:not(.dark) div.dual-scheme>pre.scheme-dark {
+    display: none;
+}
+
+html.dark div.dual-scheme>pre.scheme-light {
+    display: none;
+}

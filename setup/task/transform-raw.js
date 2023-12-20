@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------
- * Copyright (c) 2023 Yuxuan Zhang @ FOCUS Lab
+ * Copyright (c) 2023 Yuxuan Zhang, web-dev@z-yx.cc
  * This source code is licensed under the MIT license.
  * You may find the full license in project root directory.
  * ------------------------------------------------------ */
@@ -10,12 +10,13 @@ import { dirname } from 'path'
 
 import YAML from 'yaml';
 
-import traverse from '../../lib/traverse.js'
+import { skippableTraverse as traverse } from '../../lib/traverse.js'
 import { ELEMENT_NODE } from '../../lib/transform.js'
 import { baseURL } from '../../lib/env.js'
 
 import { source_id } from '../fetch-raw.js';
 import breakdown from './breakdown-article.js';
+import transformCode, { isCodeElement } from './code-block.js';
 
 const src_id = process.env.SRC_ID
 
@@ -56,11 +57,11 @@ function write_html_md(id, src, title) {
         '',
         `<script setup>`,
         `import { onMounted, ref } from "vue";`,
-        `const html = ref("");`,
-        `onMounted(async () => {`,
-        `    const raw = await import("/${id}.src.html?raw");`,
-        `    html.value = raw.default;`,
-        `});`,
+        `import html from "/${id}.src.html?raw";`,
+        // `onMounted(async () => {`,
+        // `    const raw = await import("/${id}.src.html?raw");`,
+        // `    html.value = raw.default;`,
+        // `});`,
         `</script>`,
         '',
         `<div v-html="html"></div>`,
@@ -74,19 +75,20 @@ for (const node of document.querySelectorAll(blacklist.join(','))) {
 }
 
 // Transform all links
-for (const node of traverse(document.body)) {
+for (const [node, skip_children] of traverse(document.body)) {
     if (node.nodeType !== ELEMENT_NODE) continue;
     const tagName = node.tagName.toLowerCase();
     // Remove all irrelevant tags
     if (disallowed_tags.includes(tagName)) {
         node.parentElement.removeChild(node);
         continue;
-    } else if (tagName === 'pre') {
-        // const code = document.createElement('code');
-        // code.innerHTML = node.outerHTML;
-        // node.parentNode.insertBefore(code, node);
-        // node.parentNode.removeChild(node);
-    } else if (tagName === 'table') {
+    }
+    if (tagName === 'pre' || isCodeElement(node)) {
+        await transformCode(node);
+        skip_children();
+        continue;
+    }
+    if (tagName === 'table') {
         for (const attr of node.getAttributeNames()) {
             node.removeAttribute(attr);
         }
