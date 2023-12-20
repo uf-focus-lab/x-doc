@@ -6,8 +6,9 @@ Yuxuan Zhang
 
 ## TODO LIST
 
-+ Implement outline detection and source segmentation for html tranfrom.
-+ Add auto deploy to github Actions.
+- [x] Implement outline detection and source segmentation for html transform.
+- [x] Add auto deploy to github Actions.
+- [ ] Fix code block highlighting (defaults to C syntax)
 
 ## Develop or build locally
 
@@ -17,13 +18,14 @@ Yuxuan Zhang
     $ npm install
     ```
 
-2. Setup HTML source tree (directly fetched from [x.org](www.x.org))
+2. Setup Markdown source tree (directly fetched from [x.org](www.x.org))
   
+    > ⚠️ Warning: this step will be executed in parallel (depending on your CPU count), it will take a few minutes to finish and will eat up all your CPUs.
+
     ```sh
     $ node setup
     ```
 
-    > Note: this step will be executed in parallel (depending on your CPU count), and will take a few minutes to finish.
 
 3. Launch Vite privew server
   
