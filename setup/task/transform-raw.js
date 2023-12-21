@@ -74,6 +74,17 @@ for (const node of document.querySelectorAll(blacklist.join(','))) {
     node.parentElement.removeChild(node);
 }
 
+// Hoist nested anchors
+// e.g.
+// Before: <h1><a id="first-title"></a>First title</h1>
+// After:  <h1 id="first-title"><a></a>First title</h1>
+for (const node of document.querySelectorAll("a[id]:first-child")) {
+    // Skip if parent is already an anchor
+    if (node?.parentElement?.id) continue;
+    node.parentElement.id = node.id;
+    node.removeAttribute('id');
+}
+
 // Transform all links
 for (const [node, skip_children] of traverse(document.body)) {
     if (node.nodeType !== ELEMENT_NODE) continue;
