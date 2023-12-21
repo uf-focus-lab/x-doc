@@ -77,6 +77,7 @@ function reform(arr, key) {
                 }
                 // Link is not included, add it to sub-directory
                 sub_dirs[dir].items.push({ link, text: get_title(link) });
+                continue arrange_links;
             }
             // Link does not belong to any sub-directory
             items.push({ link, text: get_title(link) });

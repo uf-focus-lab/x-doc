@@ -30,6 +30,7 @@ export default VitePressConfig({
             }
         ],
         logo: '/x.png',
-        logoLink: '/'
+        logoLink: '/',
+        outline: 'deep',
     }
 })
