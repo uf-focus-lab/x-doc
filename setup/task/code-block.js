@@ -8,6 +8,8 @@ import { JSDOM } from 'jsdom';
 import shiki from 'shiki';
 import detectLang from 'lang-detector';
 
+import { TEXT_NODE } from '../../lib/traverse.js';
+
 // Lazy loaded highlighter
 /** @type {shiki.Highlighter} */
 let __hl__;
@@ -74,7 +76,10 @@ export default async function transformCode(node) {
             div.appendChild(node_dark);
         } else {
             div.classList.add('language-plain-text');
-            div.appendChild(node.cloneNode(true));
+            for (const child of [node.firstChild, node.lastChild])
+                if (child?.nodeType === TEXT_NODE && child?.textContent?.trim() === '')
+                    node.removeChild(child);
+            div.innerHTML = `<pre><code>${node.innerHTML}<code></pre>`;
         }
         // Replace <pre> with <div>
         node.parentNode.replaceChild(div, node);
