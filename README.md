@@ -8,7 +8,8 @@ Yuxuan Zhang
 
 - [x] Implement outline detection and source segmentation for html transform.
 - [x] Add auto deploy to github Actions.
-- [ ] Fix code block highlighting (defaults to C syntax)
+- [x] Fix code block highlighting (defaults to C syntax)
+- [ ] Add links to [x.org](xxx.x.org) original pages
 
 ## Develop or build locally
 
