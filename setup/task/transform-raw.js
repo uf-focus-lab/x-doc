@@ -76,8 +76,8 @@ for (const node of document.querySelectorAll(blacklist.join(','))) {
 
 // Hoist nested anchors
 // e.g.
-// Before: <h1><a id="first-title"></a>First title</h1>
-// After:  <h1 id="first-title"><a></a>First title</h1>
+// Before: <h1><a id="hello-world"></a>Hello, world!</h1>
+// After:  <h1 id="hello-world"><a></a>Hello, world!</h1>
 for (const node of document.querySelectorAll("a[id]:first-child")) {
     // Skip if parent is already an anchor
     if (node?.parentElement?.id) continue;
