@@ -18,6 +18,7 @@ export default VitePressConfig({
     outDir: resolve(base, 'var', 'dist'),
     title: "Docs",
     description: "Modern looking documentation for X. Content ported from X.org (version 11, release 7.7).",
+    metaChunk: true,
     // https://vitepress.dev/reference/default-theme-config
     themeConfig: {
         nav,
@@ -29,6 +30,6 @@ export default VitePressConfig({
             }
         ],
         logo: '/x.png',
-        logoLink: '/',
+        logoLink: '/'
     }
 })
