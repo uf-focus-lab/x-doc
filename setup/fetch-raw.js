@@ -42,9 +42,8 @@ export function source_id(arg) {
     const rel_path = (arg instanceof URL)
         ? relative_path(arg)
         : arg;
-    if (!/\.x?html$/i.test(rel_path))
-        return;
-    return rel_path.replace(/\.x?html$/ig, '');
+    if (/\.x?html$/i.test(rel_path))
+        return rel_path.replace(/\.x?html$/ig, '');
 }
 
 /**
