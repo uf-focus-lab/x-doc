@@ -1,0 +1,27 @@
+{
+    "theme_color": "#e26132",
+    "background_color": "#e26132",
+    "icons": [
+        {
+            "purpose": "maskable",
+            "sizes": "512x512",
+            "src": "favicon-512x512.png",
+            "type": "image/png"
+        },
+        {
+            "purpose": "any",
+            "sizes": "512x512",
+            "src": "favicon-512x512R.png",
+            "type": "image/png"
+        }
+    ],
+    "orientation": "portrait",
+    "display": "standalone",
+    "dir": "auto",
+    "lang": "en-US",
+    "name": "X11 Docs",
+    "short_name": "X Doc",
+    "start_url": "https://x.z-yx.cc/",
+    "scope": "https://x.z-yx.cc/",
+    "id": "https://x.z-yx.cc/"
+}
