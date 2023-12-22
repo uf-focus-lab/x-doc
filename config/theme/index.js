@@ -5,6 +5,7 @@ import './style.css'
 import './theme.css'
 import './highlight.css'
 import './x-links.css'
+import './header-hero.css'
 
 /** @type {import('vitepress').Theme} */
 export default {

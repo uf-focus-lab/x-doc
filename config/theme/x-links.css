@@ -1,14 +1,17 @@
 a.x-external-link:not(.x-dead-link) {
     --icon: url(/icon/link-external.svg);
-    color: var(--vp-c-blue-2) !important;
+    color: var(--vp-c-yellow-2) !important;
+    display: inline-block;
+    text-decoration: underline dotted;
+}
+
+a.x-external-link:hover {
+    text-decoration: underline dashed;
 }
 
 a.x-external-link.x-dead-link {
     --icon: url(/icon/link-broken.svg);
     color: red !important;
-}
-
-a.x-external-link:not(:hover) {
     text-decoration: none;
 }
 

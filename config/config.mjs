@@ -5,6 +5,7 @@
  * ------------------------------------------------------ */
 
 import { resolve } from 'path';
+import { readFileSync } from 'fs';
 
 import { defineConfig as VitePressConfig } from 'vitepress';
 
@@ -32,5 +33,15 @@ export default VitePressConfig({
         logo: '/x.png',
         logoLink: '/',
         outline: 'deep',
+    },
+    vite: {
+        plugins: [{
+            load(id) {
+                if (id === resolve(base, 'docs', 'index.md')) {
+                    console.log(id)
+                    return readFileSync(resolve(base, 'index.md'), 'utf-8')
+                }
+            }
+        }]
     }
 })
