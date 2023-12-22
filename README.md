@@ -1,14 +1,17 @@
-# Documentations for X
+# Documentations for X, Modernized
 
-Yuxuan Zhang
+## Take a look at the [website](https://x.z-yx.cc)!
 
 > mirror of X.org official docs (version 11, release 7.7)
+>
+> Ported and converted by _Yuxuan Zhang_
 
 #### TODO LIST
 
 - [x] Implement outline detection and source segmentation for html transform.
 - [x] Add auto deploy to github Actions.
 - [x] Fix code block highlighting (defaults to C syntax)
+- [x] Make external links look different
 - [ ] Add links to [x.org](xxx.x.org) original pages
 
 ## Develop or build locally

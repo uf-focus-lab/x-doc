@@ -52,20 +52,28 @@ function write_html_md(id, src, title) {
     write(id + '.src.html', src);
     write(id + '.md', [
         `---`,
-        YAML.stringify({ title }).trim(),
+        YAML.stringify({ title, sid: id }).trim(),
         `---`,
         '',
         `<script setup>`,
-        `import { onMounted, ref } from "vue";`,
         `import html from "/${id}.src.html?raw";`,
-        // `onMounted(async () => {`,
-        // `    const raw = await import("/${id}.src.html?raw");`,
-        // `    html.value = raw.default;`,
-        // `});`,
         `</script>`,
         '',
         `<div v-html="html"></div>`,
     ].join('\n'));
+}
+
+/**
+ * Use given URL as fallback href, protocol stripped.
+ * @param {HTMLElement} el
+ * @param {URL} url 
+ */
+function link_extern(el, url, attr = 'href') {
+    if (el.tagName === 'A') {
+        el.classList.add('x-external-link');
+        el.setAttribute('target', '_blank');
+    }
+    el.setAttribute(attr, url.href.replace(/^\w+\:/i, ''));
 }
 
 // Remove components from document
@@ -88,23 +96,23 @@ for (const node of document.querySelectorAll("a[id]:first-child")) {
 // Transform all links
 for (const [node, skip_children] of traverse(document.body)) {
     if (node.nodeType !== ELEMENT_NODE) continue;
-    const tagName = node.tagName.toLowerCase();
+    const tagName = node.tagName;
     // Remove all irrelevant tags
     if (disallowed_tags.includes(tagName)) {
         node.parentElement.removeChild(node);
         continue;
     }
-    if (tagName === 'pre' || isCodeElement(node)) {
+    if (tagName === 'PRE' || isCodeElement(node)) {
         await transformCode(node);
         skip_children();
         continue;
     }
-    if (tagName === 'table') {
+    if (tagName === 'TABLE') {
         for (const attr of node.getAttributeNames()) {
             node.removeAttribute(attr);
         }
     }
-    if (/^h\d$/.test(tagName) && node?.id) {
+    if (/^H\d$/i.test(tagName) && node?.id) {
         ctx[tagName] = node.textContent.replace(/\s+/g, ' ').trim();
     }
     // Rewrite src links
@@ -114,20 +122,22 @@ for (const [node, skip_children] of traverse(document.body)) {
             node.setAttribute('src', '/logo.png');
         } else {
             const res = new URL(src_attr, src);
-            node.setAttribute('src', res.href);
+            link_extern(node, res, 'src');
         }
     }
     // Rewrite data links
     const data_attr = node.getAttribute('data');
-    if (tagName === 'object' && data_attr !== null) {
+    if (tagName === 'OBJECT' && data_attr !== null) {
         const res = new URL(data_attr, src);
-        node.setAttribute('data', res.href);
+        link_extern(node, res, 'data');
     }
     // Transform link href
-    if (tagName !== 'a') continue;
-    // Check for logo links
-    if (node.getAttribute('rel') === "home")
+    if (tagName !== 'A') continue;
+    // Check for logo links, use doc root
+    if (node.getAttribute('rel') === "home") {
+        node.setAttribute('href', '/');
         continue;
+    }
     // Extract href attribute
     const href = node.getAttribute('href');
     if (href === null || href.startsWith('#')) continue;
@@ -141,15 +151,16 @@ for (const [node, skip_children] of traverse(document.body)) {
     // Check for src_id eligibility
     const src_id = source_id(url);
     if (src_id === undefined) {
-        node.setAttribute('href', url.href);
+        node.classList.add('x-external-link');
+        node.setAttribute('target', '_blank');
+        link_extern(node, url);
         continue;
-    };
-    if (typeof map[src_id] !== 'string') {
-        node.setAttribute('disabled', '');
-        node.setAttribute('href', url.href);
+    } else if (typeof map[src_id] !== 'string') {
+        node.classList.add('x-dead-link');
+        link_extern(node, url);
         continue;
-    };
-    // Rewrite href
+    }
+    // Rewrite href to doc internal link
     node.setAttribute('href', '/' + map[src_id]);
     // Add to index
     index.push({
@@ -174,4 +185,4 @@ title = title.split(':')
 write_html_md(out_id(src_id), content, title)
 
 if (out_id(src_id).split('/').pop() === 'index')
-    write(out_id(src_id) + '.json', JSON.stringify(indexes ?? index, null, 4));
+    write(out_id(src_id) + '.json', JSON.stringify(indexes || index, null, 4));

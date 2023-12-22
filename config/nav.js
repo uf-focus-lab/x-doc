@@ -16,20 +16,20 @@ const nav = [];
 
 let ctx;
 for (const { context = {}, link = '' } of JSON.parse(index)) {
-    let { h2 = "About", h3 } = context;
-    h2 = h2.replace(/\:$/, '');
-    if (h2 !== ctx?.text) {
-        ctx = { text: h2, items: [], sub_dirs: {} };
+    let { H2 = "About", H3 } = context;
+    H2 = H2.replace(/\:$/, '');
+    if (H2 !== ctx?.text) {
+        ctx = { text: H2, items: [], sub_dirs: {} };
         nav.push(ctx);
     }
     let { items } = ctx;
-    if (h3 !== undefined) {
-        h3 = h3.replace(/\:$/, '');
-        if (!ctx.sub_dirs[h3]) {
-            ctx.sub_dirs[h3] = { text: h3, items: [] };
-            ctx.items.push(ctx.sub_dirs[h3]);
+    if (H3 !== undefined) {
+        H3 = H3.replace(/\:$/, '');
+        if (!ctx.sub_dirs[H3]) {
+            ctx.sub_dirs[H3] = { text: H3, items: [] };
+            ctx.items.push(ctx.sub_dirs[H3]);
         }
-        items = ctx.sub_dirs[h3].items;
+        items = ctx.sub_dirs[H3].items;
     }
     items.push({ text: get_title(link), link });
 }

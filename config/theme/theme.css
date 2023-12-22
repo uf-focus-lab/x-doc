@@ -1,0 +1,15 @@
+/* Extends https://github.com/vuejs/vitepress/blob/main/src/client/theme-default/styles/vars.css */
+
+:root {
+    --vp-c-blue-1: hsl(230, 62%, 50%);
+    --vp-c-blue-2: hsl(230, 68%, 55%);
+    --vp-c-blue-3: hsl(230, 70%, 60%);
+    --vp-c-blue-soft: hsla(230, 100%, 70%, 0.14);
+}
+
+.dark {
+    --vp-c-blue-1: hsl(230, 100%, 70%);
+    --vp-c-blue-2: hsl(230, 100%, 65%);
+    --vp-c-blue-3: hsl(230, 80%, 60%);
+    --vp-c-blue-soft: hsla(230, 100%, 71%, 0.16);
+}

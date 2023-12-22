@@ -1,0 +1,36 @@
+a.x-external-link:not(.x-dead-link) {
+    --icon: url(/icon/link-external.svg);
+    color: var(--vp-c-blue-2) !important;
+}
+
+a.x-external-link.x-dead-link {
+    --icon: url(/icon/link-broken.svg);
+    color: red !important;
+}
+
+a.x-external-link:not(:hover) {
+    text-decoration: none;
+}
+
+a.x-external-link.x-dead-link:hover {
+    text-decoration: line-through;
+}
+
+.x-external-link::before {
+    content: "";
+    margin: 0 0.25em;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    background: currentColor;
+    vertical-align: middle;
+    flex-shrink: 0;
+    -webkit-mask-image: var(--icon);
+    mask-image: var(--icon);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    mask-position: center;
+    transform: translateY(-0.1em);
+}

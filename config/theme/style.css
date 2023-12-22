@@ -42,11 +42,11 @@
  * - `danger`: Used to show error, or dangerous message to the users. Used
  *   in custom container, badges, etc.
  * -------------------------------------------------------------------------- */
-
+ 
 :root {
-  --vp-c-x-org-1: #e9542b;
-  --vp-c-x-org-2: #ee793a;
-  --vp-c-x-org-3: #fab442;
+  --vp-c-x-org-1: hsl(16, 75%, 54%);
+  --vp-c-x-org-2: hsl(24, 84%, 58%);
+  --vp-c-x-org-3: hsl(36, 95%, 62%);
   --vp-c-x-org-soft: rgba(255, 156, 102, 0.14);
 
   --vp-c-default-1: var(--vp-c-gray-1);
