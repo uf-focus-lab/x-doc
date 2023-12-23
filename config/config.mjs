@@ -11,6 +11,7 @@ import { defineConfig as VitePressConfig } from 'vitepress';
 
 import nav from './nav.js';
 import sidebar from './sidebar.js';
+import { splitIntoSections } from './search.js';
 
 const base = process.cwd();
 
@@ -36,12 +37,22 @@ export default VitePressConfig({
         logo: '/x.png',
         logoLink: '/',
         outline: 'deep',
+        search: {
+            provider: 'local',
+            options: {
+                miniSearch: {
+                    splitIntoSections
+                }
+            }
+        }
     },
     vite: {
+        build: {
+            chunkSizeWarningLimit: 4096,
+        },
         plugins: [{
             load(id) {
                 if (id === resolve(base, 'docs', 'index.md')) {
-                    console.log(id)
                     return readFileSync(resolve(base, 'index.md'), 'utf-8')
                 }
             }
