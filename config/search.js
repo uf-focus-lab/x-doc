@@ -17,10 +17,9 @@ async function worker() {
     // Wait for message
     const path = await new Promise(res => parentPort.once('message', res));
     // Read file
-    if (!existsSync(path)) return;
-    const html = readFileSync(
-        path.replace(/(\.md)?$/, '.src.html'), 'utf-8'
-    );
+    const src_path = path.replace(/(\.md)?$/, '.src.html');
+    if (!existsSync(src_path)) return;
+    const html = readFileSync(src_path);
     const dom = JSDOM.fragment(html);
     /**
      * Stack of title hierarchy for current working section
