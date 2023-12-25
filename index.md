@@ -9,7 +9,7 @@ hero:
   actions:
     - theme: brand
       text: Start Reading
-      link: /readme
+      link: /README
     - theme: alt
       text: X.org official site
       link: https://www.x.org
