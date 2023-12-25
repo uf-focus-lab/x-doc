@@ -5,13 +5,13 @@
         {
             "purpose": "maskable",
             "sizes": "512x512",
-            "src": "favicon-512x512.png",
+            "src": "X.png",
             "type": "image/png"
         },
         {
             "purpose": "any",
             "sizes": "512x512",
-            "src": "favicon-512x512R.png",
+            "src": "X.png",
             "type": "image/png"
         }
     ],

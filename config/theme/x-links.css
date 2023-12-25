@@ -1,3 +1,10 @@
+img[src="/logo.png"] {
+    display: inline-block;
+    height: 5rem;
+    width: auto;
+    margin: 2rem;
+}
+
 a.x-external-link:not(.x-dead-link) {
     --icon: url(/icon/link-external.svg);
     color: var(--vp-c-yellow-2) !important;

@@ -5,7 +5,7 @@
  * ------------------------------------------------------ */
 
 import { resolve } from 'path';
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync, copyFileSync } from 'fs';
 
 import { defineConfig as VitePressConfig } from 'vitepress';
 
@@ -15,14 +15,28 @@ import { splitIntoSections } from './search.js';
 
 const base = process.cwd();
 
+if (existsSync(resolve(base, 'docs', 'index.md'))) {
+    copyFileSync(resolve(base, 'docs', 'index.md'), resolve(base, 'docs', 'README.md'));
+}
+
 // https://vitepress.dev/reference/site-config
 export default VitePressConfig({
+    sitemap: {
+        hostname: 'https://x.z-yx.cc/'
+    },
     outDir: resolve(base, 'var', 'dist'),
     title: "Docs",
     description: "Modern looking documentation for X. Content ported from X.org (version 11, release 7.7).",
     metaChunk: true,
     head: [
         ['link', { rel: 'manifest', href: '/app.webmanifest' }],
+        ['link', { rel: 'icon', sizes: '512x512', href: '/icon.round.png' }],
+        ['link', { rel: 'icon', sizes: '256x256', href: '/icon.round.256.png' }],
+        ['link', { rel: 'icon', sizes: '128x128', href: '/icon.round.128.png' }],
+        ['link', { rel: 'icon', sizes: '64x64', href: '/icon.round.64.png' }],
+        // iOS web app tweaks
+        ['link', { rel: 'apple-touch-icon', href: '/icon.png' }],
+        ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ],
     // https://vitepress.dev/reference/default-theme-config
     themeConfig: {
@@ -34,7 +48,7 @@ export default VitePressConfig({
                 link: 'https://github.com/zhangyx-lab/x-doc'
             }
         ],
-        logo: '/x.png',
+        logo: '/x.svg',
         logoLink: '/',
         outline: 'deep',
         search: {
